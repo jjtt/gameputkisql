@@ -36,3 +36,11 @@ insert into m values ('36', 'game00.2', 'ce');
 --insert into m values ('37', 'game00.3', 'ce');
 --insert into m values ('38', 'game00.4', 'ce');
 
+insert into m values ('41', 'game99.1', 'ec');
+--insert into m values ('42', 'game99.2', 'ec');
+insert into m values ('43', 'game99.3', 'ec');
+--insert into m values ('44', 'game99.4', 'ec');
+insert into m values ('45', 'game00.1', 'ec');
+insert into m values ('46', 'game00.2', 'ec');
+--insert into m values ('47', 'game00.3', 'ec');
+insert into m values ('48', 'game00.4', 'ec');

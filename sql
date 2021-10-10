@@ -1,9 +1,27 @@
+with putket as
+(
+
+-- laske putkien pituudet
+select
+  osallistuja,
+  count(osallistuja) pituus
+from
+(
+
+-- numeroi putket
+select
+  osallistuja,
+  sum(case when mukana = edellinen then 0 else 1 end) over(order by osallistuja, num) as putki
+from
+(
+
+
+-- etsi putkien rajat LAG-funktiolla
 select
   osallistujat.osallistuja, 
-  sessiot.sessio,
-  m.osallistuja,
-  rank() over (partition by m.osallistuja order by osallistujat.osallistuja, sessiot.num) rank,
-  dense_rank() over (partition by m.osallistuja order by osallistujat.osallistuja, sessiot.num) dense_rank
+  sessiot.num,
+  m.osallistuja mukana,
+  lag(m.osallistuja) over (order by osallistujat.osallistuja, sessiot.num) as edellinen
 
 from
 
@@ -28,4 +46,19 @@ and sessiot.sessio = m.sessio
 
 -- järjestä osallistujittain sessiot järjestykseen
 order by osallistujat.osallistuja, sessiot.num
+
+
+) as t2
+
+) as t3
+group by osallistuja, putki
+
+)
+select
+  putket.osallistuja,
+  putket.pituus
+from putket
+where putket.pituus = (select max(pituus) from putket as p where p.osallistuja=putket.osallistuja )
+order by putket.pituus desc
+
 ;
