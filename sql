@@ -1,4 +1,10 @@
-select *
+select
+  osallistujat.osallistuja, 
+  sessiot.sessio,
+  m.osallistuja,
+  rank() over (partition by m.osallistuja order by osallistujat.osallistuja, sessiot.num) rank,
+  dense_rank() over (partition by m.osallistuja order by osallistujat.osallistuja, sessiot.num) dense_rank
+
 from
 
 -- osallistujat
