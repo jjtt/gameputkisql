@@ -1,13 +1,13 @@
 create table m (id varchar(10), sessio varchar(10), osallistuja varchar(10));
 
-insert into m values ('1', 'game99.1', 'aj');
-insert into m values ('2', 'game99.2', 'aj');
-insert into m values ('3', 'game99.3', 'aj');
-insert into m values ('4', 'game99.4', 'aj');
-insert into m values ('5', 'game00.1', 'aj');
-insert into m values ('6', 'game00.2', 'aj');
-insert into m values ('7', 'game00.3', 'aj');
-insert into m values ('8', 'game00.4', 'aj');
+insert into m values ('01', 'game99.1', 'aj');
+insert into m values ('02', 'game99.2', 'aj');
+insert into m values ('03', 'game99.3', 'aj');
+insert into m values ('04', 'game99.4', 'aj');
+insert into m values ('05', 'game00.1', 'aj');
+insert into m values ('06', 'game00.2', 'aj');
+insert into m values ('07', 'game00.3', 'aj');
+insert into m values ('08', 'game00.4', 'aj');
 
 --insert into m values ('11', 'game99.1', 'mr');
 insert into m values ('12', 'game99.2', 'mr');
