@@ -75,13 +75,10 @@ begin
   insert into p values (prev, putkimax);
 
   close curs;
-  select * from p;
 end;
 ;;
 delimiter ;
 
-select * from osallistujat;
-select * from sessiot;
-select * from sessiot_osallistujat;
 
 call putket();
+select * from p order by putki desc;
