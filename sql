@@ -28,9 +28,9 @@ delimiter ;;
 create or replace procedure putket()
 begin
   declare bDone INT;
-  declare os varchar(10);
-  declare mu varchar(10);
-  declare prev varchar(10);
+  declare os varchar(256);
+  declare mu varchar(256);
+  declare prev varchar(256);
   declare putki int;
   declare putkimax int;
   declare curs cursor for select osallistuja, mukana from sessiot_osallistujat;
