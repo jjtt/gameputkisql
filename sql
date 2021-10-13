@@ -30,12 +30,11 @@ create or replace procedure putket()
 begin
   declare bDone INT;
   declare os varchar(10);
-  declare nu INT;
   declare mu varchar(10);
   declare prev varchar(10);
   declare putki int;
   declare putkimax int;
-  declare curs cursor for select osallistuja, num, mukana from sessiot_osallistujat;
+  declare curs cursor for select osallistuja, mukana from sessiot_osallistujat;
   declare continue handler for not found set bDone = 1;
 
   drop temporary table if exists p;
@@ -51,7 +50,7 @@ begin
   set putkimax = 1;
   set prev = NULL;
   repeat
-    fetch curs into os,nu,mu;
+    fetch curs into os,mu;
     if prev = os or prev is NULL then
       if mu is not NULL then
         set putki = putki + 1;
