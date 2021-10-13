@@ -10,7 +10,6 @@ create or replace view sessiot_osallistujat
 as
       select
         osallistujat.osallistuja,
-        sessiot.num,
         m.osallistuja mukana
 
       from osallistujat
