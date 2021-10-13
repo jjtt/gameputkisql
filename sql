@@ -1,42 +1,20 @@
-with putket as
-(
+create or replace view osallistujat
+as
+select distinct osallistuja from m;
 
-  -- laske putkien pituudet
-  select
-    osallistuja,
-    count(osallistuja) pituus
-  from
-  (
+create or replace view sessiot
+as
+select sessio, min(id) as num from m group by sessio order by id;
 
-    -- numeroi putket
-    select
-      osallistuja,
-      sum(case when mukana = edellinen then 0 else 1 end) over(order by osallistuja, num) as putki
-    from
-    (
-
-      -- etsi putkien rajat LAG-funktiolla
+create or replace view sessiot_osallistujat
+as
       select
         osallistujat.osallistuja,
         sessiot.num,
-        m.osallistuja mukana,
-        lag(m.osallistuja) over (order by osallistujat.osallistuja, sessiot.num) as edellinen
+        m.osallistuja mukana
 
-      from
-
-      -- osallistujat
-      (
-        select distinct osallistuja from m
-      ) as osallistujat
-
-      -- sessiot järjestyksessä
-      join
-      (
-        select sessio, rownum() as num
-        from (
-          select distinct sessio from m order by id
-        ) as t
-      ) as sessiot
+      from osallistujat
+      join sessiot
 
       -- liitä osallistumiset
       left outer join m as m
@@ -45,18 +23,65 @@ with putket as
 
       -- järjestä osallistujittain sessiot järjestykseen
       order by osallistujat.osallistuja, sessiot.num
-
-    ) as t2
-
-  ) as t3
-  group by osallistuja, putki
-
-)
-select distinct
-  putket.osallistuja,
-  putket.pituus
-from putket
-where putket.pituus = (select max(pituus) from putket as p where p.osallistuja=putket.osallistuja)
-order by putket.pituus desc
-
 ;
+
+delimiter ;;
+create or replace procedure putket()
+begin
+  declare bDone INT;
+  declare os varchar(10);
+  declare nu INT;
+  declare mu varchar(10);
+  declare prev varchar(10);
+  declare putki int;
+  declare putkimax int;
+  declare curs cursor for select osallistuja, num, mukana from sessiot_osallistujat;
+  declare continue handler for not found set bDone = 1;
+
+  drop temporary table if exists p;
+  create temporary table if not exists p (
+    osallistuja varchar(256),
+    putki int
+  );
+
+  open curs;
+
+  set bDone = 0;
+  set putki = 0;
+  set putkimax = 1;
+  set prev = NULL;
+  repeat
+    fetch curs into os,nu,mu;
+    if prev = os or prev is NULL then
+      if mu is not NULL then
+        set putki = putki + 1;
+      else
+        if putki > putkimax then
+          set putkimax = putki;
+        end if;
+        set putki = 0;
+      end if;
+    else
+      if putki > putkimax then
+        set putkimax = putki;
+      end if;
+      insert into p values (prev, putkimax);
+      set putki = 0;
+      set putkimax = 1;
+    end if;
+    set prev = os;
+    
+  until bDone end repeat;
+  insert into p values (prev, putkimax);
+
+  close curs;
+  select * from p;
+end;
+;;
+delimiter ;
+
+select * from osallistujat;
+select * from sessiot;
+select * from sessiot_osallistujat;
+
+call putket();
